@@ -122,6 +122,35 @@ models:
         password: password
 ```
 
+#### Perfom Backup On Production
+
+Scheduling database backup using cronjob. don't forget put your credential into `~/.bashrc` and execute command `fazzbackup run`
+
+```yml
+models:
+    fazz_dbsg:
+        schedule:
+            cron: '0 1 * * *' # 01:00 AM every day
+        databases:
+            psql:
+                type: postgresql
+                host: localhost
+                port: 5432
+                database: $PG_DBNAME #credential on bashrc
+                username: $PG_USER
+                password: $PG_PASSWORD
+        storages:
+            docean:
+                type: spaces
+                bucket: fazzbucket
+                region: sgp1
+                path: fazzdb
+                access_key_id: $SPACE_ACCESS_KEY_ID #credential on bashrc
+                secret_access_key: $SPACE_SECRET_ACCESS_KEY
+        compress_with:
+            type: tgz
+```
+
 ### Start Daemon & Web UI
 
 fazzbackup bulit a HTTP Server for Web UI, you can start it by `fazzbackup start`.
@@ -135,7 +164,24 @@ $ fazzbackup start
 Starting API server on port http://127.0.0.1:2703
 ```
 
-> NOTE: If you wants start without daemon, use `fazzbackup run` instead.
+> NOTE: If you wants start without WEB UI, use `fazzbackup run` instead.
+
+### Signal handling
+
+fazzbackup will handle the following signals:
+
+-   `HUP` - Hot reload configuration.
+-   `QUIT` - Graceful shutdown.
+
+```bash
+$ ps aux | grep fazzbackup
+fazztra+ 3541141  0.0  0.9 734464 20076 ?        Ssl  Apr18   4:46 fazzbackup run
+
+# Reload configuration
+$ kill -HUP 20443
+# Exit daemon
+$ kill -QUIT 20443
+```
 
 ## License
 
