@@ -5,7 +5,7 @@
 ## Installation
 
 ```shell
-curl -sSL https://anakraX.github.io/fazzbackupweb/install | sh
+curl -sSL https://anakrax.github.io/fazzbackupweb/install | sh
 ```
 
 after that, you will get `/usr/local/bin/fazzbackup` command.
